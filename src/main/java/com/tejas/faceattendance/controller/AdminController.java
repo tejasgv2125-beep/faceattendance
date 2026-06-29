@@ -1,19 +1,23 @@
 package com.tejas.faceattendance.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class AdminController {
-
     @GetMapping("/")
-    public String loginPage() {
+    public String loginPage(Model model) {
+
+        model.addAttribute("defaultUsername", "admin");
+        model.addAttribute("defaultPassword", "admin123");
+
         return "adminLogin";
     }
 
-    @GetMapping("/dashboard")
-    public String dashboard() {
-        return "dashboard";
-    }
+//    @GetMapping("/admin/dashboard")
+//    public String dashboard() {
+//        return "dashboard";
+//    }
 
 }

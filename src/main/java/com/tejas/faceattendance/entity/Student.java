@@ -12,37 +12,44 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Name is required")
     @Column(nullable = false)
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "USN is required")
     @Column(nullable = false, unique = true)
     private String usn;
 
-    @NotBlank
+    @NotBlank(message = "Department is required")
     @Column(nullable = false)
     private String department;
 
-    @NotBlank
+    @NotBlank(message = "Semester is required")
     @Column(nullable = false)
     private String semester;
 
-    @Email
+    @Email(message = "Enter a valid email")
+    @NotBlank(message = "Email is required")
     @Column(nullable = false, unique = true)
     private String email;
 
+    @NotBlank(message = "Phone number is required")
     @Column(nullable = false)
     private String phone;
 
+    @Column(name = "photo_path")
     private String photoPath;
 
     @Lob
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(name = "face_descriptor", columnDefinition = "LONGTEXT")
     private String faceDescriptor;
 
     public Student() {
     }
+
+    // ==========================
+    // Getters and Setters
+    // ==========================
 
     public Long getId() {
         return id;
@@ -100,12 +107,12 @@ public class Student {
         this.phone = phone;
     }
 
-    public String getPhoto() {
+    public String getPhotoPath() {
         return photoPath;
     }
 
-    public void setPhoto(String photo) {
-        this.photoPath = photo;
+    public void setPhotoPath(String photoPath) {
+        this.photoPath = photoPath;
     }
 
     public String getFaceDescriptor() {

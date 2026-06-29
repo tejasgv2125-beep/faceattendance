@@ -1,0 +1,26 @@
+body{
+    background:#0f172a;
+    font-family:Poppins,sans-serif;
+}
+
+.card{
+    border:none;
+    border-radius:20px;
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+}
+
+.card-body{
+    padding:30px;
+}
+
+h1{
+    font-weight:700;
+}
+
+.list-group-item{
+    font-size:18px;
+}

@@ -1,0 +1,209 @@
+/* ===================================
+   AI SMART ATTENDANCE SYSTEM
+   Global Styles
+=================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+:root{
+
+    --primary:#7C3AED;
+    --secondary:#4F46E5;
+    --dark:#0F172A;
+    --card:#1E293B;
+    --light:#F8FAFC;
+    --success:#22C55E;
+    --danger:#EF4444;
+    --warning:#F59E0B;
+    --border:rgba(255,255,255,.12);
+
+}
+
+*{
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+
+}
+
+html{
+
+    scroll-behavior:smooth;
+
+}
+
+body{
+
+    background:linear-gradient(135deg,#0F172A,#4F46E5);
+
+    min-height:100vh;
+
+    color:white;
+
+    overflow-x:hidden;
+
+}
+
+a{
+
+    text-decoration:none;
+
+}
+
+button{
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+button:hover{
+
+    transform:translateY(-2px);
+
+}
+
+img{
+
+    max-width:100%;
+
+}
+
+.container-fluid{
+
+    padding:0;
+
+}
+
+.glass{
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(12px);
+
+    border:1px solid rgba(255,255,255,.1);
+
+    border-radius:20px;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.25);
+
+}
+
+.title{
+
+    font-size:34px;
+
+    font-weight:700;
+
+}
+
+.subtitle{
+
+    opacity:.8;
+
+    font-size:15px;
+
+}
+
+.page{
+
+    padding:30px;
+
+}
+
+.card{
+
+    background:#1E293B;
+
+    border:none;
+
+    border-radius:18px;
+
+    color:white;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
+
+    transition:.3s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-6px);
+
+}
+
+.btn-purple{
+
+    background:linear-gradient(90deg,#7C3AED,#4F46E5);
+
+    color:white;
+
+    border:none;
+
+    border-radius:10px;
+
+    padding:12px 25px;
+
+    font-weight:600;
+
+}
+
+.btn-purple:hover{
+
+    opacity:.9;
+
+}
+
+.form-control{
+
+    background:#334155;
+
+    border:none;
+
+    color:white;
+
+    height:48px;
+
+}
+
+.form-control:focus{
+
+    background:#334155;
+
+    color:white;
+
+    box-shadow:none;
+
+    border:1px solid #7C3AED;
+
+}
+
+table{
+
+    color:white;
+
+}
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#7C3AED;
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#111827;
+
+}

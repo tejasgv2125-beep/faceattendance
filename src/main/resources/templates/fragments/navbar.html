@@ -1,10 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html xmlns:th="http://www.thymeleaf.org">
 
-</body>
+<div th:fragment="navbar">
+
+    <div class="topbar">
+
+        <div>
+
+            <h4 id="pageTitle">Dashboard</h4>
+
+            <small id="currentDate"></small>
+
+        </div>
+
+        <div class="profile">
+
+            <div class="text-end">
+
+                <h6 class="mb-0">Administrator</h6>
+
+                <small id="currentTime"></small>
+
+            </div>
+
+            <img src="https://ui-avatars.com/api/?name=Admin&background=7C3AED&color=fff" alt="Admin">
+
+        </div>
+
+    </div>
+
+</div>
+
 </html>
