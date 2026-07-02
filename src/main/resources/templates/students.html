@@ -37,21 +37,75 @@
 
         <div>
 
-            <a th:href="@{/dashboard}" class="btn btn-secondary">
-
+            <a th:href="@{/dashboard}" class="btn btn-secondary me-2">
                 <i class="bi bi-speedometer2"></i>
-
                 Dashboard
-
             </a>
 
             <a th:href="@{/students/add}" class="btn btn-primary">
-
                 <i class="bi bi-person-plus-fill"></i>
-
                 Add Student
-
             </a>
+
+        </div>
+
+    </div>
+
+    <!-- Statistics -->
+
+    <div class="row mb-4">
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-people-fill fs-1 text-primary"></i>
+
+                    <h2 th:text="${totalStudents}">0</h2>
+
+                    <p>Total Students</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-person-check-fill fs-1 text-success"></i>
+
+                    <h2 th:text="${faceRegistered}">0</h2>
+
+                    <p>Face Registered</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-person-x-fill fs-1 text-danger"></i>
+
+                    <h2 th:text="${pendingRegistration}">0</h2>
+
+                    <p>Pending Registration</p>
+
+                </div>
+
+            </div>
 
         </div>
 
@@ -67,13 +121,13 @@
                     type="text"
                     id="searchInput"
                     class="form-control"
-                    placeholder="Search by Name or USN...">
+                    placeholder="Search Student...">
 
         </div>
 
     </div>
 
-    <!-- Student Table -->
+    <!-- Table -->
 
     <div class="card shadow">
 
@@ -87,13 +141,12 @@
 
                     <tr>
 
-                        <th>ID</th>
+                        <th>Photo</th>
                         <th>Name</th>
                         <th>USN</th>
                         <th>Department</th>
                         <th>Semester</th>
-                        <th>Email</th>
-                        <th>Phone</th>
+                        <th>Face Status</th>
                         <th>Actions</th>
 
                     </tr>
@@ -104,9 +157,9 @@
 
                     <tr th:if="${#lists.isEmpty(students)}">
 
-                        <td colspan="8" class="text-center text-muted">
+                        <td colspan="7" class="text-center">
 
-                            No students found.
+                            No Students Found
 
                         </td>
 
@@ -114,7 +167,23 @@
 
                     <tr th:each="student : ${students}">
 
-                        <td th:text="${student.id}"></td>
+                        <!-- Photo -->
+
+                        <td>
+
+                            <img th:if="${student.photoPath != null}"
+                                 th:src="@{${student.photoPath}}"
+                                 width="60"
+                                 height="60"
+                                 class="rounded-circle border">
+
+                            <img th:if="${student.photoPath == null}"
+                                 src="https://via.placeholder.com/60"
+                                 class="rounded-circle border">
+
+                        </td>
+
+                        <!-- Details -->
 
                         <td th:text="${student.name}"></td>
 
@@ -124,9 +193,29 @@
 
                         <td th:text="${student.semester}"></td>
 
-                        <td th:text="${student.email}"></td>
+                        <!-- Face Status -->
 
-                        <td th:text="${student.phone}"></td>
+                        <td>
+
+                            <span
+                                    th:if="${student.faceDescriptor != null}"
+                                    class="badge bg-success">
+
+                                Registered
+
+                            </span>
+
+                            <span
+                                    th:if="${student.faceDescriptor == null}"
+                                    class="badge bg-danger">
+
+                                Pending
+
+                            </span>
+
+                        </td>
+
+                        <!-- Actions -->
 
                         <td>
 
@@ -139,17 +228,18 @@
 
                             <a th:href="@{/students/delete/{id}(id=${student.id})}"
                                class="btn btn-danger btn-sm"
-                               onclick="return confirm('Delete this student?');">
+                               onclick="return confirm('Delete this student?')">
 
                                 <i class="bi bi-trash-fill"></i>
 
                             </a>
 
-                            <button class="btn btn-info btn-sm">
+                            <a th:href="@{/students/register-face/{id}(id=${student.id})}"
+                               class="btn btn-primary btn-sm">
 
-                                <i class="bi bi-camera-fill"></i>
+                                <i class="bi bi-person-bounding-box"></i>
 
-                            </button>
+                            </a>
 
                         </td>
 
@@ -167,23 +257,20 @@
 
 </div>
 
-<!-- Search Script -->
-
 <script>
 
     const searchInput = document.getElementById("searchInput");
 
     searchInput.addEventListener("keyup", function () {
 
-        let filter = this.value.toLowerCase();
+        let value = this.value.toLowerCase();
 
-        let rows = document.querySelectorAll("#studentTable tbody tr");
+        document.querySelectorAll("#studentTable tbody tr").forEach(row => {
 
-        rows.forEach(row => {
-
-            let text = row.innerText.toLowerCase();
-
-            row.style.display = text.includes(filter) ? "" : "none";
+            row.style.display =
+                row.innerText.toLowerCase().includes(value)
+                    ? ""
+                    : "none";
 
         });
 

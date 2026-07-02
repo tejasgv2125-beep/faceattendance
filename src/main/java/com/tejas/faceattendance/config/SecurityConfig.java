@@ -4,7 +4,6 @@ import com.tejas.faceattendance.security.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,49 +17,77 @@ public class SecurityConfig {
 
     public SecurityConfig(CustomUserDetailsService userDetailsService,
                           PasswordEncoder passwordEncoder) {
+
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
+
     }
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)
+            throws Exception {
 
         http
+
+                // Disable CSRF for Face API
+                .csrf(csrf -> csrf.disable())
+
                 .authorizeHttpRequests(auth -> auth
+
                         .requestMatchers(
                                 "/",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
-                                "/models/**"
+                                "/models/**",
+                                "/uploads/**"
                         ).permitAll()
-                        .anyRequest().authenticated()
+
+                        .requestMatchers("/api/faces/**")
+                        .authenticated()
+
+                        .anyRequest()
+                        .authenticated()
+
                 )
 
                 .formLogin(login -> login
+
                         .loginPage("/")
+
                         .loginProcessingUrl("/login")
+
                         .defaultSuccessUrl("/dashboard", true)
+
                         .failureUrl("/?error=true")
+
                         .permitAll()
+
                 )
 
                 .logout(logout -> logout
+
                         .logoutUrl("/logout")
+
                         .logoutSuccessUrl("/")
+
                         .permitAll()
+
                 )
 
                 .userDetailsService(userDetailsService);
 
         return http.build();
+
     }
 
     @Bean
-    AuthenticationManager authenticationManager(
+    public AuthenticationManager authenticationManager(
             AuthenticationConfiguration configuration)
             throws Exception {
 
         return configuration.getAuthenticationManager();
+
     }
+
 }
