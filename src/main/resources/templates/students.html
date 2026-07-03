@@ -24,12 +24,12 @@
 
         <div>
 
-            <h2 class="fw-bold">
-                <i class="bi bi-people-fill text-primary"></i>
+            <h2 class="fw-bold text-primary">
+                <i class="bi bi-people-fill"></i>
                 Student Management
             </h2>
 
-            <p class="text-muted">
+            <p class="text-muted mb-0">
                 Manage all registered students
             </p>
 
@@ -63,7 +63,7 @@
 
                     <i class="bi bi-people-fill fs-1 text-primary"></i>
 
-                    <h2 th:text="${totalStudents}">0</h2>
+                    <h2 th:text="${totalStudents}"></h2>
 
                     <p>Total Students</p>
 
@@ -81,7 +81,7 @@
 
                     <i class="bi bi-person-check-fill fs-1 text-success"></i>
 
-                    <h2 th:text="${faceRegistered}">0</h2>
+                    <h2 th:text="${faceRegistered}"></h2>
 
                     <p>Face Registered</p>
 
@@ -99,7 +99,7 @@
 
                     <i class="bi bi-person-x-fill fs-1 text-danger"></i>
 
-                    <h2 th:text="${pendingRegistration}">0</h2>
+                    <h2 th:text="${pendingRegistration}"></h2>
 
                     <p>Pending Registration</p>
 
@@ -117,17 +117,16 @@
 
         <div class="card-body">
 
-            <input
-                    type="text"
-                    id="searchInput"
-                    class="form-control"
-                    placeholder="Search Student...">
+            <input type="text"
+                   id="searchInput"
+                   class="form-control"
+                   placeholder="Search by Name, USN, Department...">
 
         </div>
 
     </div>
 
-    <!-- Table -->
+    <!-- Student Table -->
 
     <div class="card shadow">
 
@@ -135,18 +134,22 @@
 
             <div class="table-responsive">
 
-                <table class="table table-hover align-middle" id="studentTable">
+                <table class="table table-hover align-middle"
+                       id="studentTable">
 
                     <thead class="table-dark">
 
                     <tr>
 
+                        <th>#</th>
                         <th>Photo</th>
                         <th>Name</th>
                         <th>USN</th>
                         <th>Department</th>
                         <th>Semester</th>
-                        <th>Face Status</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Status</th>
                         <th>Actions</th>
 
                     </tr>
@@ -157,7 +160,8 @@
 
                     <tr th:if="${#lists.isEmpty(students)}">
 
-                        <td colspan="7" class="text-center">
+                        <td colspan="10"
+                            class="text-center text-muted">
 
                             No Students Found
 
@@ -165,9 +169,9 @@
 
                     </tr>
 
-                    <tr th:each="student : ${students}">
+                    <tr th:each="student, stat : ${students}">
 
-                        <!-- Photo -->
+                        <td th:text="${stat.count}"></td>
 
                         <td>
 
@@ -175,15 +179,13 @@
                                  th:src="@{${student.photoPath}}"
                                  width="60"
                                  height="60"
-                                 class="rounded-circle border">
+                                 class="rounded-circle border shadow-sm">
 
                             <img th:if="${student.photoPath == null}"
                                  src="https://via.placeholder.com/60"
-                                 class="rounded-circle border">
+                                 class="rounded-circle">
 
                         </td>
-
-                        <!-- Details -->
 
                         <td th:text="${student.name}"></td>
 
@@ -193,29 +195,27 @@
 
                         <td th:text="${student.semester}"></td>
 
-                        <!-- Face Status -->
+                        <td th:text="${student.email}"></td>
+
+                        <td th:text="${student.phone}"></td>
 
                         <td>
 
-                            <span
-                                    th:if="${student.faceDescriptor != null}"
-                                    class="badge bg-success">
+                            <span th:if="${student.faceDescriptor != null && !student.faceDescriptor.isEmpty()}"
+                                  class="badge bg-success">
 
                                 Registered
 
                             </span>
 
-                            <span
-                                    th:if="${student.faceDescriptor == null}"
-                                    class="badge bg-danger">
+                            <span th:if="${student.faceDescriptor == null || student.faceDescriptor.isEmpty()}"
+                                  class="badge bg-warning text-dark">
 
                                 Pending
 
                             </span>
 
                         </td>
-
-                        <!-- Actions -->
 
                         <td>
 
@@ -231,13 +231,6 @@
                                onclick="return confirm('Delete this student?')">
 
                                 <i class="bi bi-trash-fill"></i>
-
-                            </a>
-
-                            <a th:href="@{/students/register-face/{id}(id=${student.id})}"
-                               class="btn btn-primary btn-sm">
-
-                                <i class="bi bi-person-bounding-box"></i>
 
                             </a>
 
@@ -259,9 +252,7 @@
 
 <script>
 
-    const searchInput = document.getElementById("searchInput");
-
-    searchInput.addEventListener("keyup", function () {
+    document.getElementById("searchInput").addEventListener("keyup", function () {
 
         let value = this.value.toLowerCase();
 

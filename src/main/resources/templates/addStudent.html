@@ -49,6 +49,10 @@
                                id="capturedImage"
                                name="capturedImage">
 
+                        <input type="hidden"
+                               id="faceDescriptor"
+                               name="faceDescriptor">
+
                         <div class="row">
 
                             <div class="col-md-6 mb-3">
@@ -244,8 +248,10 @@
 
 </div>
 
-<script th:src="@{/js/studentCapture.js}"></script>
 
+<script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
+<script defer th:src="@{/js/studentCapture.js}"></script>
 </body>
 
 </html>

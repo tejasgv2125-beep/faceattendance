@@ -2,8 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>AI Smart Attendance Dashboard</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -11,9 +13,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+
 </head>
 
-<body style="background:#0f172a; color:white;">
+<body style="background:#0f172a;color:white;">
 
 <div class="container-fluid py-4">
 
@@ -22,11 +25,19 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
 
         <div>
-            <h2>AI Smart Attendance Dashboard</h2>
-            <p class="text-light">Welcome, Administrator</p>
+
+            <h2 class="fw-bold">
+                🤖 AI Smart Attendance Dashboard
+            </h2>
+
+            <p class="text-light">
+                Welcome Administrator
+            </p>
+
         </div>
 
-        <div>
+        <div class="d-flex gap-2">
+
             <a href="/students" class="btn btn-primary">
                 <i class="bi bi-people-fill"></i>
                 Students
@@ -41,6 +52,7 @@
                 <i class="bi bi-box-arrow-right"></i>
                 Logout
             </a>
+
         </div>
 
     </div>
@@ -49,9 +61,11 @@
 
     <div class="row g-4 mb-5">
 
-        <div class="col-md-3">
+        <!-- Total Students -->
 
-            <div class="card bg-dark text-white shadow">
+        <div class="col-lg-2 col-md-4">
+
+            <div class="card bg-dark text-white shadow h-100">
 
                 <div class="card-body text-center">
 
@@ -59,7 +73,7 @@
 
                     <h2 th:text="${totalStudents}">0</h2>
 
-                    <h5>Total Students</h5>
+                    <h6>Total Students</h6>
 
                 </div>
 
@@ -67,9 +81,51 @@
 
         </div>
 
-        <div class="col-md-3">
+        <!-- Registered Faces -->
 
-            <div class="card bg-dark text-white shadow">
+        <div class="col-lg-2 col-md-4">
+
+            <div class="card bg-dark text-white shadow h-100">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-person-check-fill fs-1 text-success"></i>
+
+                    <h2 th:text="${registeredFaces}">0</h2>
+
+                    <h6>Registered Faces</h6>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Pending Faces -->
+
+        <div class="col-lg-2 col-md-4">
+
+            <div class="card bg-dark text-white shadow h-100">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-person-x-fill fs-1 text-danger"></i>
+
+                    <h2 th:text="${pendingFaces}">0</h2>
+
+                    <h6>Pending Faces</h6>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Present Today -->
+
+        <div class="col-lg-2 col-md-4">
+
+            <div class="card bg-dark text-white shadow h-100">
 
                 <div class="card-body text-center">
 
@@ -77,7 +133,7 @@
 
                     <h2 th:text="${presentToday}">0</h2>
 
-                    <h5>Present Today</h5>
+                    <h6>Present Today</h6>
 
                 </div>
 
@@ -85,17 +141,19 @@
 
         </div>
 
-        <div class="col-md-3">
+        <!-- Today's Attendance -->
 
-            <div class="card bg-dark text-white shadow">
+        <div class="col-lg-2 col-md-4">
+
+            <div class="card bg-dark text-white shadow h-100">
 
                 <div class="card-body text-center">
 
-                    <i class="bi bi-x-circle-fill fs-1 text-danger"></i>
+                    <i class="bi bi-calendar-check-fill fs-1 text-info"></i>
 
-                    <h2 th:text="${absentToday}">0</h2>
+                    <h2 th:text="${todayAttendance}">0</h2>
 
-                    <h5>Absent Today</h5>
+                    <h6>Today's Attendance</h6>
 
                 </div>
 
@@ -103,17 +161,19 @@
 
         </div>
 
-        <div class="col-md-3">
+        <!-- Attendance Percentage -->
 
-            <div class="card bg-dark text-white shadow">
+        <div class="col-lg-2 col-md-4">
+
+            <div class="card bg-dark text-white shadow h-100">
 
                 <div class="card-body text-center">
 
                     <i class="bi bi-graph-up-arrow fs-1 text-warning"></i>
 
-                    <h2>98%</h2>
+                    <h2 th:text="${attendancePercentage + '%'}">0%</h2>
 
-                    <h5>Accuracy</h5>
+                    <h6>Attendance %</h6>
 
                 </div>
 
@@ -125,41 +185,102 @@
 
     <!-- Quick Actions -->
 
-    <div class="row mb-5">
+    <div class="card shadow mb-4">
 
-        <div class="col-md-12">
+        <div class="card-header bg-primary text-white">
 
-            <div class="card shadow">
+            <h5 class="mb-0">
 
-                <div class="card-header bg-primary text-white">
+                Quick Actions
 
-                    <h5 class="mb-0">
-                        Quick Actions
-                    </h5>
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="d-flex flex-wrap gap-3">
+
+                <a href="/students/add" class="btn btn-success">
+
+                    <i class="bi bi-person-plus-fill"></i>
+
+                    Add Student
+
+                </a>
+
+                <a href="/students" class="btn btn-primary">
+
+                    <i class="bi bi-people-fill"></i>
+
+                    Student Management
+
+                </a>
+
+                <a href="/attendance" class="btn btn-warning">
+
+                    <i class="bi bi-camera-video-fill"></i>
+
+                    Live Attendance
+
+                </a>
+
+                <a href="/attendance/history" class="btn btn-info text-white">
+
+                    <i class="bi bi-clock-history"></i>
+
+                    Attendance History
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Attendance Summary -->
+
+    <div class="card shadow">
+
+        <div class="card-header bg-dark text-white">
+
+            <h5 class="mb-0">
+
+                Today's Attendance Summary
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row text-center">
+
+                <div class="col-md-4">
+
+                    <h3 class="text-success"
+                        th:text="${presentToday}">0</h3>
+
+                    <p>Present</p>
 
                 </div>
 
-                <div class="card-body">
+                <div class="col-md-4">
 
-                    <div class="d-flex flex-wrap gap-3">
+                    <h3 class="text-danger"
+                        th:text="${absentToday}">0</h3>
 
-                        <a href="/students/add" class="btn btn-success">
-                            Add Student
-                        </a>
+                    <p>Absent</p>
 
-                        <a href="/students" class="btn btn-primary">
-                            View Students
-                        </a>
+                </div>
 
-                        <a href="#" class="btn btn-warning">
-                            Live Attendance
-                        </a>
+                <div class="col-md-4">
 
-                        <a href="#" class="btn btn-info">
-                            Reports
-                        </a>
+                    <h3 class="text-warning"
+                        th:text="${attendancePercentage + '%'}">0%</h3>
 
-                    </div>
+                    <p>Attendance Rate</p>
 
                 </div>
 
@@ -169,59 +290,8 @@
 
     </div>
 
-    <!-- Recent Attendance -->
-
-    <div class="card shadow">
-
-        <div class="card-header bg-dark text-white">
-
-            <h5 class="mb-0">
-                Recent Attendance
-            </h5>
-
-        </div>
-
-        <div class="card-body">
-
-            <table class="table table-striped">
-
-                <thead>
-
-                <tr>
-
-                    <th>USN</th>
-
-                    <th>Name</th>
-
-                    <th>Time</th>
-
-                    <th>Status</th>
-
-                </tr>
-
-                </thead>
-
-                <tbody>
-
-                <tr>
-
-                    <td colspan="4" class="text-center">
-
-                        No Attendance Available
-
-                    </td>
-
-                </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
 </div>
 
 </body>
+
 </html>

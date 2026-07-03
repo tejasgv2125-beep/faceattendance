@@ -1,33 +1,50 @@
 package com.tejas.faceattendance.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import com.tejas.faceattendance.entity.Student;
+import com.tejas.faceattendance.service.AttendanceService;
+import com.tejas.faceattendance.service.StudentService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
+@RequestMapping("/api/attendance")
 public class AttendanceController {
 
-    @GetMapping("/live-attendance")
-    public String liveAttendance() {
-        return "liveAttendance";
+    private final AttendanceService attendanceService;
+    private final StudentService studentService;
+
+    public AttendanceController(AttendanceService attendanceService,
+                                StudentService studentService) {
+
+        this.attendanceService = attendanceService;
+        this.studentService = studentService;
     }
 
-    @GetMapping("/reports")
-    public String reports() {
-        return "reports";
+    // ==========================================
+    // Test API
+    // ==========================================
+
+    @GetMapping("/test")
+    public String test() {
+        return "Attendance Controller Working";
     }
 
-    @GetMapping("/analytics")
-    public String analytics() {
-        return "analytics";
+    // ==========================================
+    // Mark Attendance
+    // ==========================================
+
+    @PostMapping("/mark/{studentId}")
+    public ResponseEntity<String> markAttendance(@PathVariable Long studentId) {
+
+        Student student = studentService.getStudentById(studentId);
+
+        if (student == null) {
+            return ResponseEntity.badRequest().body("Student not found.");
+        }
+
+        String message = attendanceService.markAttendance(student);
+
+        return ResponseEntity.ok(message);
     }
 
-    @GetMapping("/downloads")
-    public String downloads() {
-        return "downloads";
-    }
-
-    @GetMapping("/settings")
-    public String settings() {
-        return "settings";
-    }
 }

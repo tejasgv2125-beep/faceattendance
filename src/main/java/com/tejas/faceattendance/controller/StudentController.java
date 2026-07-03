@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.UUID;
@@ -25,9 +26,9 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    // ===========================
+    // ==========================================
     // Student List
-    // ===========================
+    // ==========================================
 
     @GetMapping
     public String viewStudents(Model model) {
@@ -46,9 +47,9 @@ public class StudentController {
         return "students";
     }
 
-    // ===========================
+    // ==========================================
     // Add Student Page
-    // ===========================
+    // ==========================================
 
     @GetMapping("/add")
     public String showAddStudentForm(Model model) {
@@ -58,49 +59,84 @@ public class StudentController {
         return "addStudent";
     }
 
-    // ===========================
+    // ==========================================
     // Save Student
-    // ===========================
+    // ==========================================
 
     @PostMapping("/save")
-    public String saveStudent(@ModelAttribute Student student,
-                              @RequestParam("capturedImage") String capturedImage)
+    public String saveStudent(
+            @ModelAttribute Student student,
+            @RequestParam(name = "capturedImage", required = false) String capturedImage,
+            @RequestParam(name = "faceDescriptor", required = false) String faceDescriptor)
             throws IOException {
 
-        if (capturedImage != null && !capturedImage.isBlank()) {
+        // ----------------------------
+        // Validate Photo
+        // ----------------------------
 
-            String base64Image = capturedImage;
+        if (capturedImage == null || capturedImage.isBlank()) {
 
-            if (capturedImage.contains(",")) {
-                base64Image = capturedImage.split(",")[1];
-            }
+            System.out.println("No image captured.");
 
-            byte[] imageBytes = Base64.getDecoder().decode(base64Image);
-
-            Files.createDirectories(Paths.get(UPLOAD_DIR));
-
-            String fileName = UUID.randomUUID() + ".jpg";
-
-            Files.write(
-                    Paths.get(UPLOAD_DIR + fileName),
-                    imageBytes
-            );
-
-            student.setPhotoPath("/uploads/students/" + fileName);
+            return "redirect:/students/add";
         }
+
+        // ----------------------------
+        // Validate Face Descriptor
+        // ----------------------------
+
+        if (faceDescriptor == null || faceDescriptor.isBlank()) {
+
+            System.out.println("Face descriptor missing.");
+
+            return "redirect:/students/add";
+        }
+
+        // ----------------------------
+        // Save Image
+        // ----------------------------
+
+        String base64Image = capturedImage;
+
+        if (capturedImage.contains(",")) {
+            base64Image = capturedImage.split(",")[1];
+        }
+
+        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+
+        Files.createDirectories(Paths.get(UPLOAD_DIR));
+
+        String fileName = UUID.randomUUID() + ".jpg";
+
+        Path imagePath = Paths.get(UPLOAD_DIR, fileName);
+
+        Files.write(imagePath, imageBytes);
+
+        student.setPhotoPath("/uploads/students/" + fileName);
+
+        // ----------------------------
+        // Save Face Descriptor
+        // ----------------------------
+
+        student.setFaceDescriptor(faceDescriptor);
+
+        // ----------------------------
+        // Save Student
+        // ----------------------------
 
         studentService.saveStudent(student);
 
         return "redirect:/students";
     }
 
-    // ===========================
+    // ==========================================
     // Edit Student
-    // ===========================
+    // ==========================================
 
     @GetMapping("/edit/{id}")
-    public String editStudent(@PathVariable Long id,
-                              Model model) {
+    public String editStudent(
+            @PathVariable Long id,
+            Model model) {
 
         Student student = studentService.getStudentById(id);
 
@@ -113,9 +149,9 @@ public class StudentController {
         return "addStudent";
     }
 
-    // ===========================
+    // ==========================================
     // Delete Student
-    // ===========================
+    // ==========================================
 
     @GetMapping("/delete/{id}")
     public String deleteStudent(@PathVariable Long id) {
@@ -123,25 +159,6 @@ public class StudentController {
         studentService.deleteStudent(id);
 
         return "redirect:/students";
-    }
-
-    // ===========================
-    // Face Registration Page
-    // ===========================
-
-    @GetMapping("/register-face/{id}")
-    public String registerFace(@PathVariable Long id,
-                               Model model) {
-
-        Student student = studentService.getStudentById(id);
-
-        if (student == null) {
-            return "redirect:/students";
-        }
-
-        model.addAttribute("student", student);
-
-        return "faceRegistration";
     }
 
 }
