@@ -20,7 +20,6 @@ public class SecurityConfig {
 
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
-
     }
 
     @Bean
@@ -29,13 +28,22 @@ public class SecurityConfig {
 
         http
 
-                // Disable CSRF for Face API
+                // Disable CSRF
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
 
+                        // ==========================================
+                        // Public Pages
+                        // ==========================================
+
                         .requestMatchers(
                                 "/",
+                                "/attendance",
+
+                                "/api/recognition/**",
+                                "/api/attendance/**",
+
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
@@ -43,8 +51,20 @@ public class SecurityConfig {
                                 "/uploads/**"
                         ).permitAll()
 
-                        .requestMatchers("/api/faces/**")
-                        .authenticated()
+                        // ==========================================
+                        // Admin Module
+                        // ==========================================
+
+                        .requestMatchers(
+                                "/dashboard",
+                                "/students/**",
+                                "/reports/**",
+                                "/settings/**",
+                                "/attendance/history/**",
+                                "/attendance/export/**"
+                        ).authenticated()
+
+                        // Everything else requires login
 
                         .anyRequest()
                         .authenticated()

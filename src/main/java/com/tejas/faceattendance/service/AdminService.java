@@ -2,22 +2,86 @@ package com.tejas.faceattendance.service;
 
 import com.tejas.faceattendance.entity.Admin;
 import com.tejas.faceattendance.repository.AdminRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class AdminService {
 
-    @Autowired
-    private AdminRepository adminRepository;
+    private final AdminRepository adminRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public Admin saveAdmin(Admin admin){
-        return adminRepository.save(admin);
+    public AdminService(AdminRepository adminRepository,
+                        PasswordEncoder passwordEncoder) {
+
+        this.adminRepository = adminRepository;
+        this.passwordEncoder = passwordEncoder;
+
     }
 
-    public Optional<Admin> login(String username){
-        return adminRepository.findByUsername(username);
+    // =====================================
+    // Get Logged-in Admin
+    // =====================================
+
+    public Admin getLoggedInAdmin() {
+
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String username = authentication.getName();
+
+        return adminRepository.findByUsername(username).orElse(null);
+
     }
+
+    // =====================================
+    // Update Profile
+    // =====================================
+
+    public void updateProfile(String name,
+                              String email) {
+
+        Admin admin = getLoggedInAdmin();
+
+        if (admin == null) {
+            return;
+        }
+
+        admin.setName(name);
+        admin.setEmail(email);
+
+        adminRepository.save(admin);
+
+    }
+
+    // =====================================
+    // Change Password
+    // =====================================
+
+    public boolean changePassword(String currentPassword,
+                                  String newPassword) {
+
+        Admin admin = getLoggedInAdmin();
+
+        if (admin == null) {
+            return false;
+        }
+
+        if (!passwordEncoder.matches(currentPassword,
+                admin.getPassword())) {
+
+            return false;
+
+        }
+
+        admin.setPassword(passwordEncoder.encode(newPassword));
+
+        adminRepository.save(admin);
+
+        return true;
+
+    }
+
 }

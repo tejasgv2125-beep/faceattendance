@@ -1,26 +1,279 @@
 body{
-    background:#0f172a;
-    font-family:Poppins,sans-serif;
+    background:#0b1220;
+    font-family:'Poppins',sans-serif;
+    color:#fff;
 }
 
-.card{
-    border:none;
+/* Header */
+
+.dashboard-header{
+    background:linear-gradient(135deg,#1e3a8a,#2563eb);
     border-radius:20px;
-    transition:.3s;
+    padding:25px 35px;
+    box-shadow:0 10px 25px rgba(0,0,0,.35);
+}
+
+/* Cards */
+
+.card{
+    background:#1e293b;
+    border:none;
+    border-radius:18px;
+    color:white;
+    transition:.35s;
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
 }
 
 .card:hover{
-    transform:translateY(-8px);
+    transform:translateY(-6px);
+    box-shadow:0 20px 40px rgba(0,0,0,.35);
 }
 
 .card-body{
-    padding:30px;
+    padding:25px;
 }
 
-h1{
+.card i{
+    margin-bottom:15px;
+}
+
+.card h2{
+    font-size:32px;
     font-weight:700;
 }
 
-.list-group-item{
-    font-size:18px;
+.card p{
+    color:#cbd5e1;
+    margin:0;
+}
+
+/* Buttons */
+
+.btn{
+    border-radius:12px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
+/* Chart Cards */
+
+.card-header{
+    border-radius:18px 18px 0 0 !important;
+    font-weight:600;
+}
+
+/* Footer */
+
+footer{
+    color:#cbd5e1;
+}
+/* ===========================
+   Dashboard Layout
+=========================== */
+
+.dashboard-layout{
+    display:flex;
+    min-height:100vh;
+}
+
+/* Sidebar */
+
+.sidebar{
+
+    width:220px;
+
+    background:#111827;
+
+    padding:30px 20px;
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    bottom:0;
+
+    box-shadow:5px 0 20px rgba(0,0,0,.3);
+
+}
+
+/* ===============================
+   Sidebar Logo
+================================ */
+
+.logo{
+
+    text-align:center;
+
+    padding-bottom:25px;
+
+    margin-bottom:30px;
+
+    border-bottom:1px solid rgba(255,255,255,.08);
+
+}
+
+.logo-icon{
+
+    width:90px;
+
+    height:90px;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+
+    box-shadow:
+            0 0 25px rgba(37,99,235,.45),
+            inset 0 0 12px rgba(255,255,255,.12);
+
+    margin-bottom:18px;
+
+}
+
+.logo-icon i{
+
+    font-size:42px;
+
+    color:white;
+
+}
+
+.logo h3{
+
+    color:white;
+
+    font-weight:700;
+
+    margin-bottom:4px;
+
+    letter-spacing:1px;
+
+}
+
+.logo p{
+
+    color:#94a3b8;
+
+    font-size:13px;
+
+    margin:0;
+
+}
+
+.logo i{
+
+    font-size:50px;
+
+    color:#3b82f6;
+
+}
+
+.logo h4{
+
+    margin-top:10px;
+
+    color:white;
+
+}
+
+.sidebar nav{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+}
+
+.sidebar nav a{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    color:#cbd5e1;
+
+    text-decoration:none;
+
+    padding:14px 18px;
+
+    border-radius:14px;
+
+    transition:.35s;
+
+    font-weight:600;
+
+}
+
+.sidebar nav a:hover{
+
+    background:linear-gradient(90deg,#2563eb,#3b82f6);
+
+    color:white;
+
+    transform:translateX(8px);
+
+    box-shadow:0 8px 20px rgba(37,99,235,.30);
+
+}
+
+.sidebar nav a.active{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+.logout{
+
+    position:absolute;
+
+    bottom:30px;
+
+    width:180px;
+
+}
+
+.logout a{
+
+    display:block;
+
+    background:#dc3545;
+
+    color:white;
+
+    text-align:center;
+
+    padding:14px;
+
+    border-radius:12px;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+}
+
+/* Main */
+
+.main-content{
+    margin-left:220px;
+    width:calc(100% - 220px);
 }

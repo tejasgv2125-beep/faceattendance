@@ -4,68 +4,81 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>AI Smart Attendance Dashboard</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>AI Smart Face Recognition Attendance System</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
 
-    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+          rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet"
+          th:href="@{/css/dashboard.css}">
 
 </head>
 
 <body style="background:#0f172a;color:white;">
 
-<div class="container-fluid py-4">
+<div class="dashboard-layout">
 
-    <!-- Header -->
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- Main Content -->
+    <main class="main-content">
 
-        <div>
+    <!-- ================= Header ================= -->
 
-            <h2 class="fw-bold">
-                🤖 AI Smart Attendance Dashboard
-            </h2>
+    <div class="dashboard-header mb-4">
 
-            <p class="text-light">
-                Welcome Administrator
-            </p>
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
 
-        </div>
+            <div>
 
-        <div class="d-flex gap-2">
+                <h2 class="fw-bold mb-1">
+                    🤖 AI Smart Face Recognition Attendance System
+                </h2>
 
-            <a href="/students" class="btn btn-primary">
-                <i class="bi bi-people-fill"></i>
-                Students
-            </a>
+                <p class="text-light mb-0">
+                    Welcome back, Administrator 👋
+                </p>
 
-            <a href="/students/add" class="btn btn-success">
-                <i class="bi bi-person-plus-fill"></i>
-                Add Student
-            </a>
+            </div>
 
-            <a href="/logout" class="btn btn-danger">
-                <i class="bi bi-box-arrow-right"></i>
-                Logout
-            </a>
+            <div class="text-end">
+
+                <div class="badge bg-primary px-3 py-2 fs-6 mb-2">
+                    <i class="bi bi-calendar-event"></i>
+                    <span id="liveDate"></span>
+                </div>
+
+                <br>
+
+                <div class="badge bg-success px-3 py-2 fs-5">
+                    <i class="bi bi-clock-history"></i>
+                    <span id="liveClock"></span>
+                </div>
+
+            </div>
 
         </div>
 
     </div>
 
+
+
     <!-- Statistics -->
 
-    <div class="row g-4 mb-5">
-
-        <!-- Total Students -->
+    <div class="row g-4 mb-4">
 
         <div class="col-lg-2 col-md-4">
 
-            <div class="card bg-dark text-white shadow h-100">
+            <div class="card bg-dark text-white shadow">
 
                 <div class="card-body text-center">
 
@@ -73,7 +86,7 @@
 
                     <h2 th:text="${totalStudents}">0</h2>
 
-                    <h6>Total Students</h6>
+                    <p>Total Students</p>
 
                 </div>
 
@@ -81,11 +94,9 @@
 
         </div>
 
-        <!-- Registered Faces -->
-
         <div class="col-lg-2 col-md-4">
 
-            <div class="card bg-dark text-white shadow h-100">
+            <div class="card bg-dark text-white shadow">
 
                 <div class="card-body text-center">
 
@@ -93,7 +104,7 @@
 
                     <h2 th:text="${registeredFaces}">0</h2>
 
-                    <h6>Registered Faces</h6>
+                    <p>Registered Faces</p>
 
                 </div>
 
@@ -101,11 +112,9 @@
 
         </div>
 
-        <!-- Pending Faces -->
-
         <div class="col-lg-2 col-md-4">
 
-            <div class="card bg-dark text-white shadow h-100">
+            <div class="card bg-dark text-white shadow">
 
                 <div class="card-body text-center">
 
@@ -113,7 +122,7 @@
 
                     <h2 th:text="${pendingFaces}">0</h2>
 
-                    <h6>Pending Faces</h6>
+                    <p>Pending Faces</p>
 
                 </div>
 
@@ -121,11 +130,9 @@
 
         </div>
 
-        <!-- Present Today -->
-
         <div class="col-lg-2 col-md-4">
 
-            <div class="card bg-dark text-white shadow h-100">
+            <div class="card bg-dark text-white shadow">
 
                 <div class="card-body text-center">
 
@@ -133,7 +140,7 @@
 
                     <h2 th:text="${presentToday}">0</h2>
 
-                    <h6>Present Today</h6>
+                    <p>Present Today</p>
 
                 </div>
 
@@ -141,19 +148,17 @@
 
         </div>
 
-        <!-- Today's Attendance -->
-
         <div class="col-lg-2 col-md-4">
 
-            <div class="card bg-dark text-white shadow h-100">
+            <div class="card bg-dark text-white shadow">
 
                 <div class="card-body text-center">
 
-                    <i class="bi bi-calendar-check-fill fs-1 text-info"></i>
+                    <i class="bi bi-person-dash-fill fs-1 text-danger"></i>
 
-                    <h2 th:text="${todayAttendance}">0</h2>
+                    <h2 th:text="${absentToday}">0</h2>
 
-                    <h6>Today's Attendance</h6>
+                    <p>Absent Today</p>
 
                 </div>
 
@@ -161,11 +166,9 @@
 
         </div>
 
-        <!-- Attendance Percentage -->
-
         <div class="col-lg-2 col-md-4">
 
-            <div class="card bg-dark text-white shadow h-100">
+            <div class="card bg-dark text-white shadow">
 
                 <div class="card-body text-center">
 
@@ -173,7 +176,7 @@
 
                     <h2 th:text="${attendancePercentage + '%'}">0%</h2>
 
-                    <h6>Attendance %</h6>
+                    <p>Attendance %</p>
 
                 </div>
 
@@ -183,104 +186,31 @@
 
     </div>
 
-    <!-- Quick Actions -->
+    <!-- Analytics -->
 
-    <div class="card shadow mb-4">
+    <div class="row">
 
-        <div class="card-header bg-primary text-white">
+        <!-- Present vs Absent -->
 
-            <h5 class="mb-0">
+        <div class="col-lg-6 mb-4">
 
-                Quick Actions
+            <div class="card shadow">
 
-            </h5>
+                <div class="card-header bg-primary text-white">
 
-        </div>
+                    <h5 class="mb-0">
 
-        <div class="card-body">
+                        Present vs Absent
 
-            <div class="d-flex flex-wrap gap-3">
-
-                <a href="/students/add" class="btn btn-success">
-
-                    <i class="bi bi-person-plus-fill"></i>
-
-                    Add Student
-
-                </a>
-
-                <a href="/students" class="btn btn-primary">
-
-                    <i class="bi bi-people-fill"></i>
-
-                    Student Management
-
-                </a>
-
-                <a href="/attendance" class="btn btn-warning">
-
-                    <i class="bi bi-camera-video-fill"></i>
-
-                    Live Attendance
-
-                </a>
-
-                <a href="/attendance/history" class="btn btn-info text-white">
-
-                    <i class="bi bi-clock-history"></i>
-
-                    Attendance History
-
-                </a>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- Attendance Summary -->
-
-    <div class="card shadow">
-
-        <div class="card-header bg-dark text-white">
-
-            <h5 class="mb-0">
-
-                Today's Attendance Summary
-
-            </h5>
-
-        </div>
-
-        <div class="card-body">
-
-            <div class="row text-center">
-
-                <div class="col-md-4">
-
-                    <h3 class="text-success"
-                        th:text="${presentToday}">0</h3>
-
-                    <p>Present</p>
+                    </h5>
 
                 </div>
 
-                <div class="col-md-4">
+                <div class="card-body">
 
-                    <h3 class="text-danger"
-                        th:text="${absentToday}">0</h3>
-
-                    <p>Absent</p>
-
-                </div>
-
-                <div class="col-md-4">
-
-                    <h3 class="text-warning"
-                        th:text="${attendancePercentage + '%'}">0%</h3>
-
-                    <p>Attendance Rate</p>
+                    <div style="height:300px; width:300px; margin:auto;">
+                        <canvas id="pieChart"></canvas>
+                    </div>
 
                 </div>
 
@@ -288,10 +218,298 @@
 
         </div>
 
+        <!-- Attendance -->
+
+        <div class="col-lg-6 mb-4">
+
+            <div class="card shadow">
+
+                <div class="card-header bg-success text-white">
+
+                    <h5 class="mb-0">
+
+                        Attendance Analytics
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <canvas id="barChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Department Analytics -->
+
+        <div class="col-lg-12 mb-4">
+
+            <div class="card shadow">
+
+                <div class="card-header bg-info text-white">
+
+                    <h5 class="mb-0">
+
+                        Students by Department
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div style="height:300px; width:300px; margin:auto;">
+                        <canvas id="departmentChart"></canvas>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
     </div>
+
+    <!-- Footer -->
+
+    <footer class="mt-5 text-center">
+
+        <hr class="border-light">
+
+        <p class="text-light mb-1">
+
+            <strong>AI Smart Face Recognition Attendance System</strong>
+
+        </p>
+
+        <p class="text-secondary">
+
+            Developed by <strong>Tejas G V</strong>
+
+        </p>
+
+    </footer>
 
 </div>
 
+<script th:inline="javascript">
+
+    // ===========================================
+    // Live Date & Clock
+    // ===========================================
+
+    function updateClock() {
+
+        const now = new Date();
+
+        document.getElementById("liveClock").innerHTML =
+            now.toLocaleTimeString();
+
+        document.getElementById("liveDate").innerHTML =
+            now.toDateString();
+
+    }
+
+    setInterval(updateClock, 1000);
+
+    updateClock();
+
+
+    // ===========================================
+    // Dashboard Statistics
+    // ===========================================
+
+    const present = [[${presentToday}]];
+    const absent = [[${absentToday}]];
+
+
+    // ===========================================
+    // Department Analytics
+    // ===========================================
+
+    const departments = [[${departments}]];
+    const departmentCounts = [[${departmentCounts}]];
+
+
+    // ===========================================
+    // Present vs Absent Pie Chart
+    // ===========================================
+
+    new Chart(document.getElementById("pieChart"), {
+
+        type: "pie",
+
+        data: {
+
+            labels: ["Present", "Absent"],
+
+            datasets: [{
+
+                data: [present, absent],
+
+                backgroundColor: [
+
+                    "#198754",
+
+                    "#dc3545"
+
+                ]
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio:false,
+
+            plugins: {
+
+                legend: {
+
+                    position: "bottom"
+
+                }
+
+            }
+
+        }
+
+    });
+
+
+    // ===========================================
+    // Attendance Analytics Bar Chart
+    // ===========================================
+
+    new Chart(document.getElementById("barChart"), {
+
+        type: "bar",
+
+        data: {
+
+            labels: ["Present", "Absent"],
+
+            datasets: [{
+
+                label: "Students",
+
+                data: [present, absent],
+
+                backgroundColor: [
+
+                    "#198754",
+
+                    "#dc3545"
+
+                ]
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            scales: {
+
+                y: {
+
+                    beginAtZero: true,
+
+                    ticks: {
+
+                        precision: 0
+
+                    }
+
+                }
+
+            },
+
+            plugins: {
+
+                legend: {
+
+                    display: false
+
+                }
+
+            }
+
+        }
+
+    });
+
+
+    // ===========================================
+    // Department-wise Pie Chart
+    // ===========================================
+
+    new Chart(document.getElementById("departmentChart"), {
+
+        type: "pie",
+
+        data: {
+
+            labels: departments,
+
+            datasets: [{
+
+                data: departmentCounts,
+
+                backgroundColor: [
+
+                    "#0d6efd",
+
+                    "#198754",
+
+                    "#ffc107",
+
+                    "#dc3545",
+
+                    "#6f42c1",
+
+                    "#20c997",
+
+                    "#fd7e14",
+
+                    "#6610f2"
+
+                ]
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            plugins: {
+
+                legend: {
+
+                    position: "bottom"
+
+                }
+
+            }
+
+        }
+
+    });
+
+</script>
+</main>
+
+</div>
 </body>
 
 </html>

@@ -1,0 +1,156 @@
+body{
+    background:#0b1220;
+    font-family:'Poppins',sans-serif;
+}
+
+/* Header */
+
+.page-header{
+
+    background:#111827;
+
+    padding:25px 30px;
+
+    border-radius:18px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
+
+}
+
+/* Cards */
+
+.stat-card{
+
+    border:none;
+
+    border-radius:18px;
+
+    transition:.3s;
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+/* Search Card */
+
+.card{
+
+    border:none;
+
+    border-radius:18px;
+
+}
+
+.input-group-text{
+
+    background:#0f172a;
+
+    color:white;
+
+    border:none;
+
+}
+
+.form-control{
+    background:white;
+    color:#212529;
+    border:1px solid #dee2e6;
+}
+
+.form-control:focus{
+    background:white;
+    color:#212529;
+    border-color:#2563eb;
+    box-shadow:0 0 0 .2rem rgba(37,99,235,.25);
+}
+
+.input-group-text{
+    background:white;
+    border:1px solid #dee2e6;
+    color:#6c757d;
+}
+/* Table */
+
+.table{
+
+    margin:0;
+
+}
+
+.table thead th{
+
+    background:#1e293b;
+
+    color:white;
+
+    border:none;
+
+}
+
+.table td{
+
+    padding:18px;
+
+    vertical-align:middle;
+
+}
+
+.table tbody tr{
+
+    transition:.25s;
+
+}
+
+.table tbody tr:hover{
+
+    background:#f8fafc;
+
+}
+
+/* Student */
+
+.student-avatar{
+
+    width:45px;
+
+    height:45px;
+
+    border-radius:50%;
+
+    background:#2563eb;
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:20px;
+
+}
+
+/* Badges */
+
+.badge{
+
+    border-radius:20px;
+
+    font-size:13px;
+
+    padding:8px 14px;
+
+}
+
+/* Buttons */
+
+.btn{
+
+    border-radius:12px;
+
+}

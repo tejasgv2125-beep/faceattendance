@@ -9,8 +9,7 @@ public class AdminController {
     @GetMapping("/")
     public String loginPage(Model model) {
 
-        model.addAttribute("defaultUsername", "admin");
-        model.addAttribute("defaultPassword", "admin123");
+
 
         return "adminLogin";
     }

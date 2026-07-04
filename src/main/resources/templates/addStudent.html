@@ -8,186 +8,359 @@
 
     <title>Add Student</title>
 
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Common Sidebar -->
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+
+    <!-- Page CSS -->
+    <link rel="stylesheet" th:href="@{/css/addStudent.css}">
 
 </head>
 
-<body class="bg-light">
+<body>
 
-<div class="container py-5">
+<div class="dashboard-layout">
 
-    <div class="row justify-content-center">
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-        <div class="col-lg-10">
+    <!-- Main Content -->
+    <main class="main-content">
 
-            <div class="card shadow-lg border-0">
+        <!-- Page Header -->
 
-                <div class="card-header bg-primary text-white">
+        <div class="page-header mb-4">
 
-                    <h3 class="mb-0">
+            <div class="d-flex justify-content-between align-items-center">
 
-                        <i class="bi bi-person-plus-fill"></i>
+                <div>
+
+                    <h2 class="fw-bold text-white">
+
+                        <i class="bi bi-person-plus-fill text-primary"></i>
 
                         Add Student
 
-                    </h3>
+                    </h2>
+
+                    <p class="text-secondary mb-0">
+
+                        Register a new student into the AI Attendance System
+
+                    </p>
 
                 </div>
 
-                <div class="card-body">
+                <a th:href="@{/students}" class="btn btn-outline-light">
 
-                    <form th:action="@{/students/save}"
-                          th:object="${student}"
-                          method="post">
+                    <i class="bi bi-arrow-left"></i>
 
-                        <input type="hidden" th:field="*{id}">
+                    Back
 
-                        <!-- Hidden field for captured image -->
-                        <input type="hidden"
-                               id="capturedImage"
-                               name="capturedImage">
+                </a>
 
-                        <input type="hidden"
-                               id="faceDescriptor"
-                               name="faceDescriptor">
+            </div>
 
-                        <div class="row">
+        </div>
 
-                            <div class="col-md-6 mb-3">
+        <!-- Form -->
 
-                                <label class="form-label">Student Name</label>
+        <form
+                th:action="@{/students/save}"
+                th:object="${student}"
+                method="post">
 
-                                <input
-                                        type="text"
-                                        class="form-control"
-                                        th:field="*{name}"
-                                        required>
+            <input type="hidden" th:field="*{id}">
 
-                            </div>
+            <input
+                    type="hidden"
+                    id="capturedImage"
+                    name="capturedImage">
 
-                            <div class="col-md-6 mb-3">
+            <input
+                    type="hidden"
+                    id="faceDescriptor"
+                    name="faceDescriptor">
 
-                                <label class="form-label">USN</label>
+            <div class="row g-4">
 
-                                <input
-                                        type="text"
-                                        class="form-control"
-                                        th:field="*{usn}"
-                                        required>
+                <!-- LEFT SIDE -->
 
-                            </div>
+                <div class="col-lg-5">
 
-                            <div class="col-md-6 mb-3">
+                    <div class="card h-100 shadow">
 
-                                <label class="form-label">Department</label>
+                        <div class="card-header">
 
-                                <input
-                                        type="text"
-                                        class="form-control"
-                                        th:field="*{department}"
-                                        required>
+                            <h5 class="mb-0">
 
-                            </div>
+                                <i class="bi bi-person-vcard-fill"></i>
 
-                            <div class="col-md-6 mb-3">
+                                Student Information
 
-                                <label class="form-label">Semester</label>
-
-                                <input
-                                        type="text"
-                                        class="form-control"
-                                        th:field="*{semester}"
-                                        required>
-
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-
-                                <label class="form-label">Email</label>
-
-                                <input
-                                        type="email"
-                                        class="form-control"
-                                        th:field="*{email}"
-                                        required>
-
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-
-                                <label class="form-label">Phone Number</label>
-
-                                <input
-                                        type="text"
-                                        class="form-control"
-                                        th:field="*{phone}"
-                                        required>
-
-                            </div>
+                            </h5>
 
                         </div>
 
-                        <hr>
+                        <div class="card-body">
 
-                        <h4 class="mb-4">
+                            <!-- Name -->
 
-                            <i class="bi bi-camera-fill"></i>
+                            <div class="mb-3">
 
-                            Capture Student Photo
+                                <label class="form-label">
 
-                        </h4>
+                                    Student Name
 
-                        <div class="row">
+                                </label>
 
-                            <!-- Live Camera -->
+                                <input
 
-                            <div class="col-md-7">
+                                        type="text"
 
-                                <video
-                                        id="video"
-                                        autoplay
-                                        playsinline
-                                        class="border rounded shadow w-100"
-                                        style="height:400px;object-fit:cover;">
-                                </video>
+                                        class="form-control"
+
+                                        th:field="*{name}"
+
+                                        required>
 
                             </div>
 
-                            <!-- Preview -->
+                            <!-- USN -->
 
-                            <div class="col-md-5 text-center">
+                            <div class="mb-3">
 
-                                <img
-                                        id="preview"
-                                        class="img-fluid rounded shadow"
-                                        style="display:none;height:300px;">
+                                <label class="form-label">
 
-                                <canvas
-                                        id="canvas"
-                                        width="640"
-                                        height="480"
-                                        style="display:none;">
-                                </canvas>
+                                    USN
 
-                                <br><br>
+                                </label>
+
+                                <input
+
+                                        type="text"
+
+                                        class="form-control"
+
+                                        th:field="*{usn}"
+
+                                        required>
+
+                            </div>
+
+                            <!-- Department -->
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+
+                                    Department
+
+                                </label>
+
+                                <input
+
+                                        type="text"
+
+                                        class="form-control"
+
+                                        th:field="*{department}"
+
+                                        required>
+
+                            </div>
+
+                            <!-- Semester -->
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+
+                                    Semester
+
+                                </label>
+
+                                <input
+
+                                        type="text"
+
+                                        class="form-control"
+
+                                        th:field="*{semester}"
+
+                                        required>
+
+                            </div>
+
+                            <!-- Email -->
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+
+                                    Email
+
+                                </label>
+
+                                <input
+
+                                        type="email"
+
+                                        class="form-control"
+
+                                        th:field="*{email}"
+
+                                        required>
+
+                            </div>
+
+                            <!-- Phone -->
+
+                            <div class="mb-4">
+
+                                <label class="form-label">
+
+                                    Phone Number
+
+                                </label>
+
+                                <input
+
+                                        type="text"
+
+                                        class="form-control"
+
+                                        th:field="*{phone}"
+
+                                        required>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- RIGHT SIDE -->
+
+                <div class="col-lg-7">
+
+                    <div class="card h-100 shadow">
+
+                        <div class="card-header">
+
+                            <h5 class="mb-0">
+
+                                <i class="bi bi-camera-fill"></i>
+
+                                Face Registration
+
+                            </h5>
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="row">
+
+                                <!-- Camera -->
+
+                                <div class="col-md-8">
+
+                                    <video
+
+                                            id="video"
+
+                                            autoplay
+
+                                            playsinline
+
+                                            class="camera-preview w-100">
+
+                                    </video>
+
+                                    <canvas
+
+                                            id="canvas"
+
+                                            width="640"
+
+                                            height="480"
+
+                                            style="display:none;">
+
+                                    </canvas>
+
+                                </div>
+
+                                <!-- Preview -->
+
+                                <div class="col-md-4">
+
+                                    <div class="preview-card">
+
+                                        <img
+
+                                                id="preview"
+
+                                                src="https://via.placeholder.com/220x260?text=Student+Photo"
+
+                                                class="img-fluid"
+
+                                                style="display:block;">
+
+                                        <h6 class="mt-3">
+
+                                            Captured Photo
+
+                                        </h6>
+
+                                        <span
+
+                                                id="cameraStatus"
+
+                                                class="badge bg-secondary">
+
+                                            Waiting for Camera...
+
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- Buttons -->
+
+                            <div class="text-center mt-4">
 
                                 <button
+
                                         type="button"
+
                                         id="captureBtn"
-                                        class="btn btn-primary">
+
+                                        class="btn btn-primary btn-lg me-3">
 
                                     <i class="bi bi-camera-fill"></i>
 
-                                    Capture Photo
+                                    Capture Face
 
                                 </button>
 
                                 <button
+
                                         type="button"
+
                                         id="retakeBtn"
-                                        class="btn btn-warning ms-2">
+
+                                        class="btn btn-warning btn-lg">
 
                                     <i class="bi bi-arrow-repeat"></i>
 
@@ -195,63 +368,60 @@
 
                                 </button>
 
-                                <div class="mt-3">
+                            </div>
 
-                                    <span
-                                            id="cameraStatus"
-                                            class="badge bg-secondary">
+                            <div class="alert alert-info mt-4 mb-0">
 
-                                        Waiting for Camera...
+                                <i class="bi bi-info-circle-fill"></i>
 
-                                    </span>
-
-                                </div>
+                                Please look directly into the camera while capturing the student's face. Ensure good lighting and avoid multiple faces in the frame.
 
                             </div>
 
                         </div>
 
-                        <hr>
-
-                        <div class="d-flex justify-content-between">
-
-                            <a th:href="@{/students}"
-                               class="btn btn-secondary">
-
-                                <i class="bi bi-arrow-left"></i>
-
-                                Back
-
-                            </a>
-
-                            <button
-                                    type="submit"
-                                    class="btn btn-success">
-
-                                <i class="bi bi-check-circle-fill"></i>
-
-                                Save Student
-
-                            </button>
-
-                        </div>
-
-                    </form>
+                    </div>
 
                 </div>
 
             </div>
+            <!-- Bottom Buttons -->
 
-        </div>
+            <div class="d-flex justify-content-between align-items-center mt-4">
 
-    </div>
+                <a th:href="@{/students}"
+                   class="btn btn-outline-light btn-lg">
+
+                    <i class="bi bi-arrow-left-circle"></i>
+
+                    Back to Students
+
+                </a>
+
+                <button
+                        type="submit"
+                        class="btn btn-success btn-lg px-5">
+
+                    <i class="bi bi-check-circle-fill"></i>
+
+                    Save Student
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </main>
 
 </div>
 
-
+<!-- Face API -->
 <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 
+<!-- Student Capture -->
 <script defer th:src="@{/js/studentCapture.js}"></script>
+
 </body>
 
 </html>

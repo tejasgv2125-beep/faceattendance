@@ -1,6 +1,8 @@
 package com.tejas.faceattendance.service;
 
+import com.tejas.faceattendance.entity.Attendance;
 import com.tejas.faceattendance.entity.Student;
+import com.tejas.faceattendance.repository.AttendanceRepository;
 import com.tejas.faceattendance.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +13,13 @@ import java.util.Optional;
 public class StudentService {
 
     private final StudentRepository studentRepository;
+    private final AttendanceRepository attendanceRepository;
 
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(StudentRepository studentRepository,
+                          AttendanceRepository attendanceRepository) {
+
         this.studentRepository = studentRepository;
+        this.attendanceRepository = attendanceRepository;
     }
 
     // =====================================
@@ -106,6 +112,61 @@ public class StudentService {
                         student.getFaceDescriptor() != null &&
                                 !student.getFaceDescriptor().trim().isEmpty())
                 .toList();
+    }
+
+    // =====================================
+    // Student Profile Methods
+    // =====================================
+
+    public long getPresentDays(Student student) {
+
+        return attendanceRepository.countByStudentAndStatus(
+                student,
+                "Present"
+        );
+    }
+
+    public long getTotalAttendance(Student student) {
+
+        return attendanceRepository.countByStudent(student);
+    }
+
+    public long getAbsentDays(Student student) {
+
+        long totalAttendance = getTotalAttendance(student);
+
+        long presentDays = getPresentDays(student);
+
+        return totalAttendance - presentDays;
+    }
+
+    public double getAttendancePercentage(Student student) {
+
+        long totalAttendance = getTotalAttendance(student);
+
+        if (totalAttendance == 0) {
+            return 0;
+        }
+
+        long presentDays = getPresentDays(student);
+
+        return (presentDays * 100.0) / totalAttendance;
+    }
+
+    public List<Attendance> getAttendanceHistory(Student student) {
+
+        return attendanceRepository
+                .findByStudentOrderByAttendanceDateDescAttendanceTimeDesc(student);
+    }
+
+    // =====================================
+    // Department Analytics
+    // =====================================
+
+    public List<Object[]> getDepartmentWiseStudentCount() {
+
+        return studentRepository.getDepartmentWiseStudentCount();
+
     }
 
 }

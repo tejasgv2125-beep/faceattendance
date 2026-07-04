@@ -18,16 +18,18 @@ public class AttendanceService {
         this.attendanceRepository = attendanceRepository;
     }
 
-    // ===========================
+    // ==========================================
     // Mark Attendance
-    // ===========================
+    // ==========================================
 
     public String markAttendance(Student student) {
 
         LocalDate today = LocalDate.now();
 
-        // Prevent duplicate attendance
-        if (attendanceRepository.findByStudentAndAttendanceDate(student, today).isPresent()) {
+        if (attendanceRepository
+                .findByStudentAndAttendanceDate(student, today)
+                .isPresent()) {
+
             return "Attendance already marked today.";
         }
 
@@ -43,19 +45,117 @@ public class AttendanceService {
         return "Attendance marked successfully.";
     }
 
-    // ===========================
-    // Get Today's Attendance
-    // ===========================
+    // ==========================================
+    // Today's Attendance
+    // ==========================================
 
     public List<Attendance> getTodayAttendance() {
+
         return attendanceRepository.findByAttendanceDate(LocalDate.now());
+
     }
 
-    // ===========================
-    // Get All Attendance
-    // ===========================
+    // ==========================================
+    // All Attendance
+    // ==========================================
 
     public List<Attendance> getAllAttendance() {
+
+        return attendanceRepository
+                .findAllByOrderByAttendanceDateDescAttendanceTimeDesc();
+
+    }
+
+    // ==========================================
+    // Last 7 Days Analytics
+    // ==========================================
+
+    public List<Object[]> getLast7DaysAttendance() {
+
+        LocalDate startDate = LocalDate.now().minusDays(6);
+
+        return attendanceRepository.getAttendanceAnalytics(startDate);
+
+    }
+
+    // ==========================================
+    // Reports Filter
+    // ==========================================
+
+    public List<Attendance> filterAttendance(
+            LocalDate date,
+            String department,
+            String status) {
+
+        boolean hasDate =
+                date != null;
+
+        boolean hasDepartment =
+                department != null &&
+                        !department.isBlank() &&
+                        !department.equalsIgnoreCase("All");
+
+        boolean hasStatus =
+                status != null &&
+                        !status.isBlank() &&
+                        !status.equalsIgnoreCase("All");
+
+        if (hasDate && hasDepartment && hasStatus) {
+
+            return attendanceRepository
+                    .findByAttendanceDateAndStudent_DepartmentAndStatus(
+                            date,
+                            department,
+                            status
+                    );
+        }
+
+        if (hasDate && hasDepartment) {
+
+            return attendanceRepository
+                    .findByAttendanceDateAndStudent_Department(
+                            date,
+                            department
+                    );
+        }
+
+        if (hasDate && hasStatus) {
+
+            return attendanceRepository
+                    .findByAttendanceDateAndStatus(
+                            date,
+                            status
+                    );
+        }
+
+        if (hasDepartment && hasStatus) {
+
+            return attendanceRepository
+                    .findByStudent_DepartmentAndStatus(
+                            department,
+                            status
+                    );
+        }
+
+        if (hasDate) {
+
+            return attendanceRepository
+                    .findByAttendanceDate(date);
+        }
+
+        if (hasDepartment) {
+
+            return attendanceRepository
+                    .findByStudent_Department(department);
+        }
+
+        if (hasStatus) {
+
+            return attendanceRepository
+                    .findByStatus(status);
+        }
+
         return attendanceRepository.findAll();
     }
+
 }

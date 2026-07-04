@@ -48,6 +48,47 @@ public class StudentController {
     }
 
     // ==========================================
+    // Student Profile
+    // ==========================================
+
+    @GetMapping("/profile/{id}")
+    public String viewStudentProfile(
+            @PathVariable Long id,
+            Model model) {
+
+        Student student = studentService.getStudentById(id);
+
+        if (student == null) {
+            return "redirect:/students";
+        }
+
+        model.addAttribute("student", student);
+
+        model.addAttribute(
+                "presentDays",
+                studentService.getPresentDays(student)
+        );
+
+        model.addAttribute(
+                "absentDays",
+                studentService.getAbsentDays(student)
+        );
+
+        model.addAttribute(
+                "attendancePercentage",
+                String.format("%.2f",
+                        studentService.getAttendancePercentage(student))
+        );
+
+        model.addAttribute(
+                "attendanceHistory",
+                studentService.getAttendanceHistory(student)
+        );
+
+        return "studentProfile";
+    }
+
+    // ==========================================
     // Add Student Page
     // ==========================================
 
@@ -66,8 +107,10 @@ public class StudentController {
     @PostMapping("/save")
     public String saveStudent(
             @ModelAttribute Student student,
-            @RequestParam(name = "capturedImage", required = false) String capturedImage,
-            @RequestParam(name = "faceDescriptor", required = false) String faceDescriptor)
+            @RequestParam(name = "capturedImage", required = false)
+            String capturedImage,
+            @RequestParam(name = "faceDescriptor", required = false)
+            String faceDescriptor)
             throws IOException {
 
         // ----------------------------
@@ -99,20 +142,26 @@ public class StudentController {
         String base64Image = capturedImage;
 
         if (capturedImage.contains(",")) {
+
             base64Image = capturedImage.split(",")[1];
+
         }
 
-        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+        byte[] imageBytes =
+                Base64.getDecoder().decode(base64Image);
 
         Files.createDirectories(Paths.get(UPLOAD_DIR));
 
         String fileName = UUID.randomUUID() + ".jpg";
 
-        Path imagePath = Paths.get(UPLOAD_DIR, fileName);
+        Path imagePath =
+                Paths.get(UPLOAD_DIR, fileName);
 
         Files.write(imagePath, imageBytes);
 
-        student.setPhotoPath("/uploads/students/" + fileName);
+        student.setPhotoPath(
+                "/uploads/students/" + fileName
+        );
 
         // ----------------------------
         // Save Face Descriptor
@@ -138,10 +187,13 @@ public class StudentController {
             @PathVariable Long id,
             Model model) {
 
-        Student student = studentService.getStudentById(id);
+        Student student =
+                studentService.getStudentById(id);
 
         if (student == null) {
+
             return "redirect:/students";
+
         }
 
         model.addAttribute("student", student);
@@ -154,7 +206,8 @@ public class StudentController {
     // ==========================================
 
     @GetMapping("/delete/{id}")
-    public String deleteStudent(@PathVariable Long id) {
+    public String deleteStudent(
+            @PathVariable Long id) {
 
         studentService.deleteStudent(id);
 

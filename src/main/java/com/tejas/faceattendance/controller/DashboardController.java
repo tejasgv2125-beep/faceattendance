@@ -2,23 +2,33 @@ package com.tejas.faceattendance.controller;
 
 import com.tejas.faceattendance.repository.AttendanceRepository;
 import com.tejas.faceattendance.repository.StudentRepository;
+import com.tejas.faceattendance.service.StudentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import com.tejas.faceattendance.service.AttendanceService;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class DashboardController {
 
     private final StudentRepository studentRepository;
     private final AttendanceRepository attendanceRepository;
+    private final StudentService studentService;
+    private final AttendanceService attendanceService;
 
     public DashboardController(StudentRepository studentRepository,
-                               AttendanceRepository attendanceRepository) {
+                               AttendanceRepository attendanceRepository,
+                               StudentService studentService,
+                               AttendanceService attendanceService) {
 
         this.studentRepository = studentRepository;
         this.attendanceRepository = attendanceRepository;
+        this.studentService = studentService;
+        this.attendanceService = attendanceService;
     }
 
     @GetMapping("/dashboard")
@@ -64,6 +74,44 @@ public class DashboardController {
         }
 
         // ==========================
+        // Department Analytics
+        // ==========================
+
+        List<Object[]> departmentData =
+                studentService.getDepartmentWiseStudentCount();
+
+        List<String> departments = new ArrayList<>();
+
+        List<Long> departmentCounts = new ArrayList<>();
+
+        for (Object[] row : departmentData) {
+
+            departments.add((String) row[0]);
+
+            departmentCounts.add((Long) row[1]);
+
+        }
+        // ==========================
+// Last 7 Days Attendance Analytics
+// ==========================
+
+        List<Object[]> analyticsData =
+                attendanceService.getLast7DaysAttendance();
+
+        List<String> attendanceDates = new ArrayList<>();
+
+        List<Long> attendanceCounts = new ArrayList<>();
+
+        for (Object[] row : analyticsData) {
+
+            attendanceDates.add(row[0].toString());
+
+            attendanceCounts.add((Long) row[1]);
+
+        }
+
+
+        // ==========================
         // Send Data to Dashboard
         // ==========================
 
@@ -75,9 +123,18 @@ public class DashboardController {
         model.addAttribute("absentToday", absentToday);
 
         model.addAttribute("todayAttendance", todayAttendance);
-        model.addAttribute("attendancePercentage",
-                String.format("%.1f", attendancePercentage));
+
+        model.addAttribute(
+                "attendancePercentage",
+                String.format("%.1f", attendancePercentage)
+        );
+
+        model.addAttribute("departments", departments);
+        model.addAttribute("departmentCounts", departmentCounts);
+        model.addAttribute("attendanceDates", attendanceDates);
+        model.addAttribute("attendanceCounts", attendanceCounts);
 
         return "dashboard";
     }
+
 }

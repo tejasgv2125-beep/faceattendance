@@ -29,6 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 admin.getEnabled(),
                 true,
                 true,
+
                 true,
                 Collections.singletonList(
                         new SimpleGrantedAuthority("ROLE_" + admin.getRole().name())

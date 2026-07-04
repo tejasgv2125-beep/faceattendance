@@ -1,0 +1,257 @@
+/* Student Statistics Cards */
+
+.stat-card{
+    border:none;
+    border-radius:18px;
+    overflow:hidden;
+    position:relative;
+    transition:.3s;
+    background:#1e293b;
+    color:white;
+}
+
+.stat-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 15px 30px rgba(0,0,0,.25);
+}
+
+.stat-card::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:5px;
+}
+
+.students-card::before{
+    background:#3b82f6;
+}
+
+.registered-card::before{
+    background:#10b981;
+}
+
+.pending-card::before{
+    background:#ef4444;
+}
+
+.icon-circle{
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin:auto;
+    margin-bottom:15px;
+}
+
+.icon-circle i{
+    color:white;
+    font-size:28px;
+}
+
+.card-body h2{
+    font-weight:700;
+}
+
+.card-body p{
+    color:#cbd5e1;
+}
+/* Header */
+
+.page-header{
+
+    background:#111827;
+
+    padding:25px 35px;
+
+    border-radius:18px;
+
+    margin-bottom:25px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
+
+}
+.search-box{
+
+    position:relative;
+
+}
+
+.search-box i{
+
+    position:absolute;
+
+    top:14px;
+
+    left:18px;
+
+    color:#6b7280;
+
+}
+
+.search-box input{
+
+    padding-left:48px;
+
+    height:50px;
+
+    border-radius:12px;
+
+}
+.student-table-head{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+.student-table-head th{
+
+    border:none;
+
+    padding:18px;
+
+}
+.action-btn{
+
+    width:40px;
+
+    height:40px;
+
+    border-radius:12px;
+
+    margin-right:5px;
+
+}
+/* Student Table Card */
+
+.student-table-card{
+    border-radius:20px;
+    overflow:hidden;
+    background:#1e293b;
+}
+
+.student-table-card .card-body{
+    padding:0;
+}
+.student-table{
+
+    color:white;
+
+    margin:0;
+
+}
+
+.student-table tbody tr{
+
+    transition:.25s;
+
+}
+
+.student-table tbody tr:hover{
+
+    background:#334155;
+
+    transform:scale(1.005);
+
+}
+
+.student-table td{
+
+    padding:18px;
+
+    vertical-align:middle;
+
+    border-color:#334155;
+
+}
+
+.student-table th{
+
+    padding:18px;
+
+}
+.student-photo{
+
+    width:60px;
+
+    height:60px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:3px solid #2563eb;
+
+    box-shadow:0 5px 15px rgba(37,99,235,.35);
+
+}
+.status-registered{
+
+    background:#10b981;
+
+    padding:8px 14px;
+
+    border-radius:25px;
+
+    font-size:13px;
+
+}
+
+.status-pending{
+
+    background:#f59e0b;
+
+    color:white;
+
+    padding:8px 14px;
+
+    border-radius:25px;
+
+    font-size:13px;
+
+}
+.action-btn{
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:10px;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin-right:6px;
+
+}
+.student-filter-card{
+
+    background:#111827;
+
+    border-radius:18px;
+
+}
+
+.student-filter-card input{
+
+    height:50px;
+
+    border-radius:12px;
+
+}
+
+.student-filter-card select{
+
+    height:50px;
+
+    border-radius:12px;
+
+}
