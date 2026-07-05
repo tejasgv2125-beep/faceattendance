@@ -26,7 +26,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     // ==========================================
 
     List<Attendance> findByStudent(Student student);
-
+    List<Attendance> findTop5ByOrderByAttendanceDateDescAttendanceTimeDesc();
     List<Attendance> findByStudentOrderByAttendanceDateDescAttendanceTimeDesc(
             Student student
     );

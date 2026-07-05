@@ -1,0 +1,313 @@
+/* ==========================
+   Attendance Terminal
+========================== */
+
+body{
+    background:#0b1220;
+    font-family:'Poppins',sans-serif;
+    color:#ffffff;
+}
+
+/* ==========================
+   Header
+========================== */
+
+.page-header{
+
+    background:linear-gradient(135deg,#1e3a8a,#2563eb);
+
+    border-radius:20px;
+
+    padding:30px;
+
+    text-align:center;
+
+    margin-bottom:30px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
+
+}
+
+.page-header h1{
+
+    font-size:34px;
+
+    font-weight:700;
+
+    color:white;
+
+    margin-bottom:10px;
+
+}
+
+.page-header p{
+
+    color:#dbeafe;
+
+    font-size:16px;
+
+    margin:0;
+
+}
+
+/* ==========================
+   Cards
+========================== */
+
+.attendance-card{
+
+    background:#1e293b;
+
+    border:none;
+
+    border-radius:20px;
+
+    box-shadow:0 12px 30px rgba(0,0,0,.30);
+
+    transition:.3s;
+
+    overflow:hidden;
+
+}
+
+.attendance-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+/* ==========================
+   Card Header
+========================== */
+
+.card-header{
+
+    background:#111827;
+
+    color:white;
+
+    padding:18px 24px;
+
+    border:none;
+
+}
+
+.card-header h5{
+
+    margin:0;
+
+    font-weight:600;
+
+}
+
+/* ==========================
+   Card Body
+========================== */
+
+.card-body{
+
+    padding:30px;
+
+}
+
+/* ==========================
+   Camera
+========================== */
+
+.camera-frame{
+
+    width:100%;
+
+    max-width:700px;
+
+    height:500px;
+
+    object-fit:cover;
+
+    border-radius:18px;
+
+    border:4px solid #2563eb;
+
+    background:black;
+
+    box-shadow:0 0 30px rgba(37,99,235,.30);
+
+}
+
+/* ==========================
+   Student Photo
+========================== */
+
+.student-photo{
+
+    width:180px;
+
+    height:180px;
+
+    object-fit:cover;
+
+    border-radius:50%;
+
+    border:5px solid #2563eb;
+
+    box-shadow:0 0 20px rgba(37,99,235,.40);
+
+}
+
+/* ==========================
+   Student Name
+========================== */
+
+#studentName{
+
+    font-size:28px;
+
+    font-weight:700;
+
+    color:white;
+
+}
+
+#studentUSN{
+
+    color:#cbd5e1;
+
+    font-size:17px;
+
+}
+
+/* ==========================
+   Student Details
+========================== */
+
+.student-details{
+
+    margin-top:25px;
+
+}
+
+.detail-item{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:12px;
+
+    background:#0f172a;
+
+    padding:14px;
+
+    border-radius:12px;
+
+    margin-bottom:15px;
+
+    color:#e2e8f0;
+
+    font-size:16px;
+
+}
+
+.detail-item i{
+
+    color:#3b82f6;
+
+    font-size:20px;
+
+}
+
+/* ==========================
+   Attendance Status
+========================== */
+
+#attendanceStatus{
+
+    font-size:18px;
+
+    font-weight:600;
+
+    border-radius:12px;
+
+    padding:15px;
+
+}
+
+/* ==========================
+   Alert Colors
+========================== */
+
+.alert-success{
+
+    background:#16a34a;
+
+    color:white;
+
+    border:none;
+
+}
+
+.alert-warning{
+
+    background:#f59e0b;
+
+    color:#111827;
+
+    border:none;
+
+}
+
+.alert-danger{
+
+    background:#dc2626;
+
+    color:white;
+
+    border:none;
+
+}
+
+/* ==========================
+   Responsive
+========================== */
+
+@media(max-width:992px){
+
+    .camera-frame{
+
+        height:350px;
+
+    }
+
+    .page-header h1{
+
+        font-size:28px;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .camera-frame{
+
+        height:280px;
+
+    }
+
+    .student-photo{
+
+        width:150px;
+
+        height:150px;
+
+    }
+
+    #studentName{
+
+        font-size:24px;
+
+    }
+
+}

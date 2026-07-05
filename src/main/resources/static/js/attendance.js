@@ -8,20 +8,21 @@ const canvas = document.getElementById("canvas");
 const studentPhoto = document.getElementById("studentPhoto");
 const studentName = document.getElementById("studentName");
 const studentUSN = document.getElementById("studentUSN");
+const studentDepartment = document.getElementById("studentDepartment");
+const studentSemester = document.getElementById("studentSemester");
 
 const attendanceStatus = document.getElementById("attendanceStatus");
-const cameraStatus = document.getElementById("cameraStatus");
 
 // =========================================
 // Variables
 // =========================================
 
-let stream;
+let stream = null;
 let registeredStudents = [];
 let faceMatcher = null;
 
-// Prevent duplicate attendance requests
 let lastRecognizedStudent = null;
+let recognitionRunning = false;
 
 // =========================================
 // Load Face API Models
@@ -29,13 +30,16 @@ let lastRecognizedStudent = null;
 
 async function loadModels() {
 
-    cameraStatus.innerHTML = "Loading AI Models...";
+    attendanceStatus.className = "alert alert-info";
+    attendanceStatus.innerHTML = "Loading AI Models...";
 
     await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
     await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
     await faceapi.nets.faceRecognitionNet.loadFromUri("/models");
 
-    cameraStatus.innerHTML = "AI Models Loaded";
+    attendanceStatus.className = "alert alert-success";
+    attendanceStatus.innerHTML = "AI Models Loaded";
+
 }
 
 // =========================================
@@ -44,38 +48,42 @@ async function loadModels() {
 
 async function loadRegisteredStudents() {
 
-    cameraStatus.innerHTML = "Loading Registered Students...";
+    attendanceStatus.className = "alert alert-info";
+    attendanceStatus.innerHTML = "Loading Registered Students...";
 
     const response = await fetch("/api/recognition/students");
 
     if (!response.ok) {
+
         throw new Error("Unable to load registered students.");
+
     }
 
-    const students = await response.json();
-
-    registeredStudents = students;
+    registeredStudents = await response.json();
 
     const labeledDescriptors = [];
 
-    students.forEach(student => {
+    registeredStudents.forEach(student => {
 
         if (
-            student.faceDescriptor == null ||
+            !student.faceDescriptor ||
             student.faceDescriptor.trim() === ""
         ) {
             return;
         }
 
-        const descriptorArray = JSON.parse(student.faceDescriptor);
-
-        const descriptor = new Float32Array(descriptorArray);
+        const descriptor = new Float32Array(
+            JSON.parse(student.faceDescriptor)
+        );
 
         labeledDescriptors.push(
 
             new faceapi.LabeledFaceDescriptors(
+
                 student.id.toString(),
+
                 [descriptor]
+
             )
 
         );
@@ -87,8 +95,11 @@ async function loadRegisteredStudents() {
         0.55
     );
 
-    cameraStatus.innerHTML =
-        "Loaded " + labeledDescriptors.length + " Registered Students";
+    attendanceStatus.className = "alert alert-success";
+    attendanceStatus.innerHTML =
+        labeledDescriptors.length +
+        " Students Loaded";
+
 }
 
 // =========================================
@@ -102,9 +113,11 @@ async function startCamera() {
         stream = await navigator.mediaDevices.getUserMedia({
 
             video: {
+
                 width: 1280,
                 height: 720,
                 facingMode: "user"
+
             },
 
             audio: false
@@ -113,7 +126,20 @@ async function startCamera() {
 
         video.srcObject = stream;
 
-        cameraStatus.innerHTML = "Camera Ready";
+        await new Promise(resolve => {
+
+            video.onloadedmetadata = () => {
+
+                video.play();
+
+                resolve();
+
+            };
+
+        });
+
+        attendanceStatus.className = "alert alert-success";
+        attendanceStatus.innerHTML = "Camera Ready";
 
     }
 
@@ -121,9 +147,30 @@ async function startCamera() {
 
         console.error(error);
 
-        cameraStatus.innerHTML = "Unable to access camera";
+        attendanceStatus.className = "alert alert-danger";
+        attendanceStatus.innerHTML =
+            "Unable to access camera.";
+
+        throw error;
 
     }
+
+}
+// =========================================
+// Reset Student Information
+// =========================================
+
+function resetStudentInfo() {
+
+    studentPhoto.src = "https://via.placeholder.com/180";
+
+    studentName.innerHTML = "Waiting...";
+
+    studentUSN.innerHTML = "----";
+
+    studentDepartment.innerHTML = "Department";
+
+    studentSemester.innerHTML = "Semester";
 
 }
 
@@ -142,10 +189,13 @@ async function markAttendance(student) {
     try {
 
         const response = await fetch(
+
             "/api/attendance/mark/" + student.id,
+
             {
                 method: "POST"
             }
+
         );
 
         const message = await response.text();
@@ -153,11 +203,15 @@ async function markAttendance(student) {
         if (response.ok) {
 
             attendanceStatus.className = "alert alert-success";
+
             attendanceStatus.innerHTML = message;
 
-        } else {
+        }
+
+        else {
 
             attendanceStatus.className = "alert alert-danger";
+
             attendanceStatus.innerHTML = message;
 
         }
@@ -169,7 +223,10 @@ async function markAttendance(student) {
         console.error(error);
 
         attendanceStatus.className = "alert alert-danger";
-        attendanceStatus.innerHTML = "Unable to mark attendance.";
+
+        attendanceStatus.innerHTML =
+
+            "Unable to mark attendance.";
 
     }
 
@@ -181,108 +238,253 @@ async function markAttendance(student) {
 
 async function startRecognition() {
 
+    if (recognitionRunning) return;
+
+    recognitionRunning = true;
+
     setInterval(async () => {
 
         if (!faceMatcher) return;
 
         const detection = await faceapi
+
             .detectSingleFace(
+
                 video,
+
                 new faceapi.TinyFaceDetectorOptions()
+
             )
+
             .withFaceLandmarks()
+
             .withFaceDescriptor();
 
-        // No Face
+        // =====================================
+        // No Face Detected
+        // =====================================
 
         if (!detection) {
 
-            attendanceStatus.className = "alert alert-warning";
-            attendanceStatus.innerHTML = "No Face Detected";
+            attendanceStatus.className =
 
-            studentPhoto.src = "https://via.placeholder.com/180";
+                "alert alert-warning";
 
-            studentName.innerHTML = "Waiting...";
-            studentUSN.innerHTML = "----";
+            attendanceStatus.innerHTML =
+
+                "Waiting for Face...";
+
+            resetStudentInfo();
 
             lastRecognizedStudent = null;
 
             return;
+
         }
 
-        // Compare
+        // =====================================
+        // Compare Face
+        // =====================================
 
         const bestMatch = faceMatcher.findBestMatch(
+
             detection.descriptor
+
         );
 
-        // Unknown
+        // =====================================
+        // Unknown Person
+        // =====================================
 
         if (bestMatch.label === "unknown") {
 
-            attendanceStatus.className = "alert alert-danger";
-            attendanceStatus.innerHTML = "Unknown Face";
+            attendanceStatus.className =
 
-            studentPhoto.src = "https://via.placeholder.com/180";
+                "alert alert-danger";
 
-            studentName.innerHTML = "Unknown";
+            attendanceStatus.innerHTML =
+
+                "Unknown Face";
+
+            studentPhoto.src =
+
+                "https://via.placeholder.com/180";
+
+            studentName.innerHTML =
+
+                "Unknown Person";
+
             studentUSN.innerHTML = "----";
+
+            studentDepartment.innerHTML =
+
+                "Department";
+
+            studentSemester.innerHTML =
+
+                "Semester";
 
             lastRecognizedStudent = null;
 
             return;
+
         }
 
+        // =====================================
         // Find Student
+        // =====================================
 
         const student = registeredStudents.find(
+
             s => s.id.toString() === bestMatch.label
+
         );
 
         if (!student) return;
 
-        // Update UI
+        // =====================================
+        // Update Student Information
+        // =====================================
 
         studentPhoto.src = student.photoPath;
+
         studentName.innerHTML = student.name;
+
         studentUSN.innerHTML = student.usn;
 
+        studentDepartment.innerHTML =
+
+            student.department;
+
+        studentSemester.innerHTML =
+
+            student.semester;
+
+        // =====================================
         // Mark Attendance
+        // =====================================
 
         await markAttendance(student);
 
     }, 1000);
 
 }
-
 // =========================================
-// Initialize
+// Initialize Attendance Terminal
 // =========================================
 
-(async () => {
+async function initializeAttendanceSystem() {
 
     try {
 
+        // Reset UI
+
+        resetStudentInfo();
+
+        attendanceStatus.className = "alert alert-info";
+        attendanceStatus.innerHTML = "Initializing Attendance Terminal...";
+
+        // Load Face API Models
+
         await loadModels();
+
+        // Load Registered Students
 
         await loadRegisteredStudents();
 
+        // Start Camera
+
         await startCamera();
 
-        startRecognition();
+        // Start Recognition
+
+        await startRecognition();
 
         attendanceStatus.className = "alert alert-success";
-        attendanceStatus.innerHTML = "Recognition Started";
+        attendanceStatus.innerHTML =
+            "System Ready - Please Stand in Front of the Camera";
 
     }
 
     catch (error) {
 
-        console.error(error);
+        console.error("Initialization Error :", error);
 
         attendanceStatus.className = "alert alert-danger";
-        attendanceStatus.innerHTML = error.message;
+
+        attendanceStatus.innerHTML =
+            "System Initialization Failed.";
 
     }
 
-})();
+}
+
+// =========================================
+// Auto Reset Student Card
+// =========================================
+
+function autoResetCard() {
+
+    setTimeout(() => {
+
+        resetStudentInfo();
+
+        attendanceStatus.className = "alert alert-warning";
+
+        attendanceStatus.innerHTML =
+            "Waiting for Face...";
+
+        lastRecognizedStudent = null;
+
+    }, 3000);
+
+}
+
+// =========================================
+// Enhance markAttendance()
+// =========================================
+//
+// After:
+//
+// attendanceStatus.innerHTML = message;
+//
+// add:
+//
+// autoResetCard();
+//
+// in BOTH success and failure blocks.
+//
+// Example:
+//
+// if(response.ok){
+//
+//      attendanceStatus.className="alert alert-success";
+//
+//      attendanceStatus.innerHTML=message;
+//
+//      autoResetCard();
+//
+// }
+//
+// else{
+//
+//      attendanceStatus.className="alert alert-danger";
+//
+//      attendanceStatus.innerHTML=message;
+//
+//      autoResetCard();
+//
+// }
+//
+// =========================================
+
+
+// =========================================
+// Start System
+// =========================================
+
+window.addEventListener("load", () => {
+
+    initializeAttendanceSystem();
+
+});

@@ -7,7 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.tejas.faceattendance.service.AttendanceService;
-
+import com.tejas.faceattendance.entity.Admin;
+import com.tejas.faceattendance.service.AdminService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,16 +20,18 @@ public class DashboardController {
     private final AttendanceRepository attendanceRepository;
     private final StudentService studentService;
     private final AttendanceService attendanceService;
-
+    private final AdminService adminService;
     public DashboardController(StudentRepository studentRepository,
                                AttendanceRepository attendanceRepository,
                                StudentService studentService,
-                               AttendanceService attendanceService) {
+                               AttendanceService attendanceService,
+                               AdminService adminService) {
 
         this.studentRepository = studentRepository;
         this.attendanceRepository = attendanceRepository;
         this.studentService = studentService;
         this.attendanceService = attendanceService;
+        this.adminService = adminService;
     }
 
     @GetMapping("/dashboard")
@@ -109,6 +112,11 @@ public class DashboardController {
             attendanceCounts.add((Long) row[1]);
 
         }
+//        List<Attendance> recentAttendance =
+//                attendanceRepository
+//                        .findTop5ByOrderByAttendanceDateDescAttendanceTimeDesc();
+//
+//        model.addAttribute("recentAttendance", recentAttendance);
 
 
         // ==========================
@@ -133,7 +141,9 @@ public class DashboardController {
         model.addAttribute("departmentCounts", departmentCounts);
         model.addAttribute("attendanceDates", attendanceDates);
         model.addAttribute("attendanceCounts", attendanceCounts);
+        Admin admin = adminService.getLoggedInAdmin();
 
+        model.addAttribute("admin", admin);
         return "dashboard";
     }
 
